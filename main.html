@@ -3,7 +3,8 @@
     <head>
         <title>Coupon Map</title>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-        <!-- <link rel="import" href="extern.html" /> -->
+        <!-- will refer to functions inside main.js-->
+        <script type = "text/javascript" src="main.js"></script>
       
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
@@ -12,6 +13,7 @@
         <hr>
     <div id="map"></div>
       <form>
+        <!-- Could use if person wants to insert imag of business to their pop-up window-->
         <input type = "file" id = "fileInputControl" accept = "text plain" />     
         Name of Business: <input type="text" name="business_name" >
         Phone Number: <input type="text" name="phone_number" >
@@ -34,15 +36,17 @@
             <option value="Travel">Travel Services</option>
             <option value="Tutoring">Tutoring Services</option>
             <option value="Yardwork">Yard Maintainance</option>
-
         </select>
+
+        <!--Once business finishes putting credentials-->
+        &nbsp&nbsp&nbsp <input type="button" class="button"
+        value="Submit" 
+        onclick="markersOnMap()" >
         <br>
 
         </form>
-        
     <!-- prettier-ignore -->
-    <!-- <script>
-        const api_key = process.env.APIKEY;
+        <!-- const api_key = process.env.APIKEY;
         const HtmlWebpackPlugin = require('html-webpack-plugin');
         
         module.exports = {
@@ -54,20 +58,19 @@
                     apiUrl: `https://maps.googleapis.com/maps/api/js?key=${api_key}`,
                 })
             ]
-        };
-    </script> -->
-        <!-- //  <link href="extern.html" rel="import" />
+        }; -->
+    <!-- </script> 
+     //  <link href="extern.html" rel="import" />
         // if ("import" in document.createElement("link")) {
             // <link href="extern.html" rel="import" />
-        // }
-    // (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-    // ({key: "AIzaSyAvxgG4sqVYYwOGp3TqCN1PGvU824TgOsM", v: "weekly"});</script>  -->
+        // } -->
+          
     <script type="module" src="config.js"></script>
     <script type="module" src="main.js"></script>
 
-     <!-- <script type=’text/javascript’ src=’main.js></script>
-    <script type=’text/javascript’ src=’app.js></script>
-    <script type=’text/javascript’ src=script.js></script>  -->
-    <!-- <script type="module" src="app.js"></script> -->
+    <!-- <script type=’text/javascript’ src=’main.js></script> -->
+    <!-- <script type=’text/javascript’ src=’app.js></script>
+    <script type=’text/javascript’ src=script.js></script>  
+    <script type="module" src="app.js"></script> --> 
 </body>
 </html>

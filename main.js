@@ -6,6 +6,8 @@ let map;
 
 
 async function initMap() {
+  //provides geographical coordinates corresponding to a location -- this is causing google maps platform to not pop up!
+  // geocoder = new google.maps.Geocoder();
   const { Map } = await google.maps.importLibrary("maps");
   map = new Map(document.getElementById("map"), {
     //coordinates of windsor
@@ -14,7 +16,7 @@ async function initMap() {
     mapTypeId: "terrain",
 
   });
-  //create markers
+  //create markers -- this will be added depending on businesses input of address information
   const marker = new google.maps.Marker({
     position: { lat: 42.3149, lng: -83.0364 },
     //which map we want to specify the marker
@@ -33,6 +35,22 @@ const infoWindow = new google.maps.InfoWindow({
 infoWindow.open(map, marker);
 }
 initMap();
+
+// //will go to function if button is clicked
+function markersOnMap(){  
+  //used to check if button was clicked 
+  alert("Button clicked");
+  //add marker based on address inputted
+
+
+}
+
+// //create geocoordinates to system
+// function geocodeAddress(address){
+  
+// }
+
+
 
 
 

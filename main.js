@@ -13,7 +13,7 @@ async function initMap() {
   map = new Map(document.getElementById("map"), {
     //coordinates of windsor
     center: { lat: 42.3149, lng: -83.0364 },
-    zoom: 12,
+    zoom: 10,
     mapTypeId: "terrain",
 
   });
@@ -52,6 +52,7 @@ function markersOnMap(){
   //calls the function to convert address to coordinates
   //just write "document.getElementbyId('address').value"
   geocode(document.getElementById('address').value);
+  alert()
   //calls function to find geocode address 
   // const marker = new google.maps.Marker({
   //   position: { lat: coordinates[0], lng: coordinates[1] },
@@ -79,9 +80,10 @@ function markersOnMap(){
 
 //create geocoordinates to system -- modify from stackoverflow file
 function geocode(address){ 
+  initMap();
   geocoder = new google.maps.Geocoder();
   geocoder.geocode( {'address': address}, function(results, status) {
-    //comment this out?
+    //checks if geocode project is good 
     if (status == google.maps.GeocoderStatus.OK) {
       //this is where error occurs
       alert(results[0])
@@ -92,13 +94,10 @@ function geocode(address){
         position: {
           lat: results[0].geometry.location.lat(),
           lng: results[0].geometry.location.lng(),
-          // lat: 42.3149, 
-          // lng: -83.0364
         },
+        animation: google.maps.Animation.DROP,
         draggable:false,
       });
-      alert(lat, lng);
-      alert(position);
       //get info typed from text box to popup window
       //infowindow.setContent(currentLocation[0]);
       infowindow = new google.maps.InfoWindow({
@@ -110,9 +109,12 @@ function geocode(address){
   else {
     alert("Geocode was not successful for the following reasons" + status);
   }
-});
+  });
 
 }
+
+//TO DO:
+// - add marker object to an arraylist (such that when initMap is called (during startup -- all markers are shown))
 
 
 

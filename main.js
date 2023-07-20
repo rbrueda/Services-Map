@@ -3,12 +3,19 @@ let map;
 let geocoder;
 let respondseDiv;
 let response;
+//global array -- wont stringify?? -- for future purposes, could but all these attributes in one object named place
+let locations = [];
+let lat = [];
+let lng = [];
+let business = [];
+let address = [];
+let email = [];
+let phone = [];
+
 
 var bounds, infowindow;
 
 async function initMap() {
-  //provides geographical coordinates corresponding to a location -- this is causing google maps platform to not pop up!
-
   const { Map } = await google.maps.importLibrary("maps");
   map = new Map(document.getElementById("map"), {
     //coordinates of windsor
@@ -17,12 +24,15 @@ async function initMap() {
     mapTypeId: "terrain",
 
   });
-  // geocoder = new google.maps.Geocoder();
+  geocoder = new google.maps.Geocoder();
   //create markers -- this will be added depending on businesses input of address information
   //will go to the markersOnMap function
   //plan= go through an arraylist which will go through all the elements in the array
+
+  //problem: array size is reset to 0 when page refreshes
+  //To do: find a way to create array that stays constant even after recompiling (local storage array)
   const marker = new google.maps.Marker({
-    position: { lat: 42.3149, lng: -83.0364 },
+    position: { lat: parseFloat(JSON.parse(localStorage.getItem('lat'))), lng:  parseFloat(JSON.parse(localStorage.getItem('lng')))},
     //which map we want to specify the marker
     map: map,
     label: "S", //possible way to categorize our stores?
@@ -31,12 +41,31 @@ async function initMap() {
     animation: google.maps.Animation.DROP,
     // icon: "maps png" //change the markers by colour (inserting an image)
   });
- //allows us to create infomration windows over the markers
+  alert(localStorage.getItem('business'));
+  alert(localStorage.getItem('address'));
+  alert(localStorage.getItem('email'));
+  alert(localStorage.getItem('phone'));
+
   infowindow = new google.maps.InfoWindow({
-  content: "<p>This is an info window</p>",
-});
-//access window open variable
-infowindow.open(map, marker);
+    content: "<p>" + JSON.parse(localStorage.getItem('business')) + "<br />" +
+    JSON.parse(localStorage.getItem('address')) + "<br />" + 
+    JSON.parse(localStorage.getItem('email')) + "<br /> " + JSON.parse(localStorage.getItem('phone'))
+   + "<br />" + "</p>",
+  });
+  infowindow.open(map, marker);
+  
+
+//   //loop through every object
+//   let i =0
+//   while (i < locations.size * 2){
+//     alert("got inside loop")
+//     var result1 = localStorage.getItem(locations[i]);
+//     i += 1;
+//     var result2 = localStorage.getItem(locations[i])
+//     //access window open variable
+//     result2.open(map, result1);
+//     i += 1;
+//   }
 }
 initMap();
 
@@ -44,42 +73,14 @@ initMap();
 function markersOnMap(){  
   //used to check if button was clicked 
   alert("Button clicked");
-
-  //got address
-  // var address = document.getElementById('address').value;
-  alert(document.getElementById('address').value);
-  // const coordinates = new Array(2);
-  //calls the function to convert address to coordinates
-  //just write "document.getElementbyId('address').value"
   geocode(document.getElementById('address').value);
-  alert()
-  //calls function to find geocode address 
-  // const marker = new google.maps.Marker({
-  //   position: { lat: coordinates[0], lng: coordinates[1] },
-  //   //which map we want to specify the marker
-  //   map: map,
-  //   label: "S", //possible way to categorize our stores?
-  //   title: "New location",
-  //   draggable: false,
-  //   animation: google.maps.Animation.DROP,
-  //   // icon: "maps png" //change the markers by colour (inserting an image)
-  // });
-  // //allows us to create infomration windows over the markers
-  
-  // //bring this code to the async function initMap()-- markersOnMap will return "marker"
-  // infowindow = new google.maps.InfoWindow({
-  //   content: "<p>This is an another window</p>",
-  // });
-  // infowindow.open(map, marker);
-  //add these elements to arrayList
-
-  //add marker based on address inputted
 }
 
-//practice address: 2384 Glenwood Ave, Windsor, ON, Canada
+//practice address: 3120 Dougall Ave, Windsor, ON, Canada
 
 //create geocoordinates to system -- modify from stackoverflow file
 function geocode(address){ 
+  //adds marker to base map
   initMap();
   geocoder = new google.maps.Geocoder();
   geocoder.geocode( {'address': address}, function(results, status) {
@@ -101,20 +102,50 @@ function geocode(address){
       //get info typed from text box to popup window
       //infowindow.setContent(currentLocation[0]);
       infowindow = new google.maps.InfoWindow({
-        content: "<p>This is another info window</p>",
+        content: "<p>" + document.getElementById('business').value + "<br />" +
+         document.getElementById('address').value + "<br />" + 
+         document.getElementById('email').value + "<br /> " + document.getElementById('phone').value
+        + "<br />" + "</p>",
       });
       infowindow.open(map, marker);
       alert("geocode function accessed");
     }
-  else {
-    alert("Geocode was not successful for the following reasons" + status);
-  }
+    else {
+      alert("Geocode was not successful for the following reasons" + status);
+    }
+    lat.push(results[0].geometry.location.lat());
+    localStorage.setItem('lat', JSON.stringify(lat));
+
+    lng.push(results[0].geometry.location.lng());
+    localStorage.setItem('lng', JSON.stringify(lng));
+
+    business.push(document.getElementById('business').value);
+    localStorage.setItem('business', JSON.stringify(business));
+
+    address.push(document.getElementById('address').value);
+    localStorage.setItem('address', JSON.stringify(address));
+
+    email.push(document.getElementById('email').value);
+    localStorage.setItem('email', JSON.stringify(email));
+
+    phone.push(document.getElementById('phone').value);
+    localStorage.setItem('phone', JSON.stringify(phone));
+
   });
+
 
 }
 
 //TO DO:
-// - add marker object to an arraylist (such that when initMap is called (during startup -- all markers are shown))
+// - add marker object and info window object to an array (such that when initMap is called (during startup -- all markers are shown))
+// - make it work with multiple addresses
+//    - use cookies??
+// - find a way to get info window to only display IF marker is clicked
+
+//Features:
+// - info window feature displayed above (add image to infowindow?)
+// - dropdown menu for with country, depending on which country someone buts on dropdown menu, the coordinaties will be placed accordingly
+// - dropdown for user to put which type of service they like and markers will be filtered out
 
 
 

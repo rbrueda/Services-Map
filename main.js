@@ -1,16 +1,32 @@
+//TO DO:
+// - add marker object and info window object to an array (such that when initMap is called (during startup -- all markers are shown))
+// - make it work with multiple addresses
+//    - use cookies??
+// - find a way to get info window to only display IF marker is clicked
+
+//Features:
+// - info window feature displayed above (add image to infowindow?)
+// - dropdown menu for with country, depending on which country someone buts on dropdown menu, the coordinaties will be placed accordingly
+// - dropdown for user to put which type of service they like and markers will be filtered out
+
+//Problems:
+// - adds like a string, is not added as an array of strings (for localstorage)
+// - will only add to the array when not refreshed -- ie localStorage will only override the new array (hence why it is not acting like an array)
+
+
 let map;
-//used before attaining the environment variables
 let geocoder;
 let respondseDiv;
 let response;
-//global array -- wont stringify?? -- for future purposes, could but all these attributes in one object named place
+//global array -- wont stringify?? -- for future purposes, could put all these attributes in one object named place
 let locations = [];
 let lat = [];
 let lng = [];
-let business = [];
-let address = [];
-let email = [];
-let phone = [];
+let businessList = [];
+let addressList = [];
+let emailList = [];
+let phoneList = [];
+let serviceList = [];
 
 
 var bounds, infowindow;
@@ -39,6 +55,7 @@ async function initMap() {
     title: "Windsor",
     draggable: false,
     animation: google.maps.Animation.DROP,
+    
     // icon: "maps png" //change the markers by colour (inserting an image)
   });
   alert(localStorage.getItem('business'));
@@ -46,26 +63,19 @@ async function initMap() {
   alert(localStorage.getItem('email'));
   alert(localStorage.getItem('phone'));
 
+
+  //gets a specific index from the array of business names
+  let businessArray = localStorage.getItem('business');
+  let businessName = JSON.parse(businessArray);
+
   infowindow = new google.maps.InfoWindow({
-    content: "<p>" + JSON.parse(localStorage.getItem('business')) + "<br />" +
+    content: "<p>" + businessName[0] + "<br />" +
     JSON.parse(localStorage.getItem('address')) + "<br />" + 
     JSON.parse(localStorage.getItem('email')) + "<br /> " + JSON.parse(localStorage.getItem('phone'))
    + "<br />" + "</p>",
   });
   infowindow.open(map, marker);
-  
 
-//   //loop through every object
-//   let i =0
-//   while (i < locations.size * 2){
-//     alert("got inside loop")
-//     var result1 = localStorage.getItem(locations[i]);
-//     i += 1;
-//     var result2 = localStorage.getItem(locations[i])
-//     //access window open variable
-//     result2.open(map, result1);
-//     i += 1;
-//   }
 }
 initMap();
 
@@ -77,6 +87,7 @@ function markersOnMap(){
 }
 
 //practice address: 3120 Dougall Ave, Windsor, ON, Canada
+// 3195 Howard Ave, Windsor, ON, Canada
 
 //create geocoordinates to system -- modify from stackoverflow file
 function geocode(address){ 
@@ -119,33 +130,32 @@ function geocode(address){
     lng.push(results[0].geometry.location.lng());
     localStorage.setItem('lng', JSON.stringify(lng));
 
-    business.push(document.getElementById('business').value);
-    localStorage.setItem('business', JSON.stringify(business));
+    businessList.push(document.getElementById('business').value);
+    //prints out as a string not a array -- only if you credentals saved in array if page does not refresh
+    //if page is refreshed, and user inputs other credential, it will be overriden
+    alert(businessList);   
+    localStorage.setItem('business', JSON.stringify(businessList));
 
-    address.push(document.getElementById('address').value);
-    localStorage.setItem('address', JSON.stringify(address));
+    alert((document.getElementById('address').value));
+    addressList.push((document.getElementById('address').value));
+    alert(addressList);
+    localStorage.setItem('address', JSON.stringify(addressList));
 
-    email.push(document.getElementById('email').value);
-    localStorage.setItem('email', JSON.stringify(email));
+    emailList.push(document.getElementById('email').value);
+    localStorage.setItem('email', JSON.stringify(emailList));
 
-    phone.push(document.getElementById('phone').value);
-    localStorage.setItem('phone', JSON.stringify(phone));
+    phoneList.push(document.getElementById('phone').value);
+    localStorage.setItem('phone', JSON.stringify(phoneList));
 
+    serviceList.push(document.getElementById('category').value);
+    localStorage.setItem('category', JSON.stringify(serviceList));
+
+    
+    
   });
 
 
 }
-
-//TO DO:
-// - add marker object and info window object to an array (such that when initMap is called (during startup -- all markers are shown))
-// - make it work with multiple addresses
-//    - use cookies??
-// - find a way to get info window to only display IF marker is clicked
-
-//Features:
-// - info window feature displayed above (add image to infowindow?)
-// - dropdown menu for with country, depending on which country someone buts on dropdown menu, the coordinaties will be placed accordingly
-// - dropdown for user to put which type of service they like and markers will be filtered out
 
 
 

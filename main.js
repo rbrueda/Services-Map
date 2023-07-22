@@ -1,5 +1,4 @@
 //TO DO:
-// - add marker object and info window object to an array (such that when initMap is called (during startup -- all markers are shown))
 // - make it work with multiple addresses
 //    - use cookies??
 // - find a way to get info window to only display IF marker is clicked
@@ -18,16 +17,54 @@ let map;
 let geocoder;
 let respondseDiv;
 let response;
-//global array -- wont stringify?? -- for future purposes, could put all these attributes in one object named place
-let locations = [];
-let lat = [];
-let lng = [];
-let businessList = [];
-let addressList = [];
-let emailList = [];
-let phoneList = [];
-let serviceList = [];
+//global arrays -- make local of otehr thing works
 
+//create a hashmap to target service values to characters
+//C = cleaning
+//F = food 
+//H = hair
+//IT = it consulting
+//L = legal services
+//Pe = pest control
+//Pl = plumbing
+//R = real estate
+//S = security 
+//Tp = transportation
+//Tv = travel
+//Tu = tutoring
+//Y = yard
+
+//created a dictionary -- do make the information more neatly displayed
+function Dictionary(){
+  this.datastore = []; 
+
+  this.add = function(lat, lng, businessList, addressList, emailList, phoneList, serviceList){
+    
+  };
+  //might use this method -- to add a feature to delete a key (based on address) -- user types the address in a textbox
+  this.removeAt = function(addressList){
+    for (var i = 0; i < this.datastore.length; i++){
+      if (this.datastore[i].address === addressList){
+        this.datastore.splice(this.dataStore[i], 1);
+        return this.datastore;
+      }
+    }
+    return this.datastore;
+  }
+
+  //might be good for hidding certain markers
+  this.findAt = function(serviceList){
+    for (var i = 0; i < this.datastore.length; i++){
+      if (this.datastore[i].service === serviceList){
+        hiddenIndexes.push(i);
+      }
+    }
+  }
+
+  this.size = function(){
+    return this.datastore.length;
+  };
+}
 
 var bounds, infowindow;
 
@@ -47,37 +84,64 @@ async function initMap() {
 
   //problem: array size is reset to 0 when page refreshes
   //To do: find a way to create array that stays constant even after recompiling (local storage array)
-  const marker = new google.maps.Marker({
-    position: { lat: parseFloat(JSON.parse(localStorage.getItem('lat'))), lng:  parseFloat(JSON.parse(localStorage.getItem('lng')))},
-    //which map we want to specify the marker
-    map: map,
-    label: "S", //possible way to categorize our stores?
-    title: "Windsor",
-    draggable: false,
-    animation: google.maps.Animation.DROP,
+    // alert(localStorage.getItem('lat'));
+    // let latArray = parseString(localStorage.getItem('lat'));
+    // alert(latArray);
+    // let lngArray = parseString(localStorage.getItem('lng'));
+    // let businessArray = parseString(localStorage.getItem('business'));
+    // let addressArray = parseString(localStorage.getItem('address'));
+    // let emailArray = parseString(localStorage.getItem('email'));
+    // let phoneArray = parseString(localStorage.getItem('phone'));
+    // let categoryArray = parseString(localStorage.getItem('category'));
+    var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+
+    for (let i = 0; i < storedArray.length; i++){
+      const marker = new google.maps.Marker({
+        position: { lat: storedArray[i].lat, lng:  storedArray[i].lng},
+        //which map we want to specify the marker
+        map: map,
+        label: "Sl", //possible way to categorize our stores?
+        title: "Windsor",
+        draggable: false,
+        animation: google.maps.Animation.DROP,
+        
+        // icon: "maps png" //change the markers by colour (inserting an image)
+      });
+      //contents for each location
     
-    // icon: "maps png" //change the markers by colour (inserting an image)
-  });
-  alert(localStorage.getItem('business'));
-  alert(localStorage.getItem('address'));
-  alert(localStorage.getItem('email'));
-  alert(localStorage.getItem('phone'));
+    
+      //gets a specific index from the array of business names
+      // let businessArray = localStorage.getItem('business');
+      // let businessName = JSON.parse(businessArray);
+    
+      infowindow = new google.maps.InfoWindow({
+        content: "<p>" + storedArray[i].business + "<br />" +
+        storedArray[i].address + "<br />" + 
+       storedArray[i].email + "<br /> " + storedArray[i].phone
+       + "<br />" + "</p>",
+      });
+      infowindow.open(map, marker);
+    }
+  
+  }
 
 
-  //gets a specific index from the array of business names
-  let businessArray = localStorage.getItem('business');
-  let businessName = JSON.parse(businessArray);
-
-  infowindow = new google.maps.InfoWindow({
-    content: "<p>" + businessName[0] + "<br />" +
-    JSON.parse(localStorage.getItem('address')) + "<br />" + 
-    JSON.parse(localStorage.getItem('email')) + "<br /> " + JSON.parse(localStorage.getItem('phone'))
-   + "<br />" + "</p>",
-  });
-  infowindow.open(map, marker);
-
-}
 initMap();
+
+//will parse string from local storage into an array
+function parseString(str){
+  alert(str);
+  let array = str;
+  alert(str.includes("/"));
+  if (str.includes("/")){
+    array = str.split("/");
+  }
+  let parse = JSON.parse(array);
+  alert(parse);
+  return parse;
+}
+
+//for the future, make a function that will search for a certain category, such that will be what will be displayed on the screen
 
 //will go to function if button is clicked
 function markersOnMap(){  
@@ -91,16 +155,13 @@ function markersOnMap(){
 
 //create geocoordinates to system -- modify from stackoverflow file
 function geocode(address){ 
+
   //adds marker to base map
   initMap();
   geocoder = new google.maps.Geocoder();
   geocoder.geocode( {'address': address}, function(results, status) {
     //checks if geocode project is good 
     if (status == google.maps.GeocoderStatus.OK) {
-      //this is where error occurs
-      alert(results[0])
-      // map.SetCenter(results[0].geometry.location); 
-      //variable is never accessed
       var marker = new google.maps.Marker({
         map: map,
         position: {
@@ -110,8 +171,6 @@ function geocode(address){
         animation: google.maps.Animation.DROP,
         draggable:false,
       });
-      //get info typed from text box to popup window
-      //infowindow.setContent(currentLocation[0]);
       infowindow = new google.maps.InfoWindow({
         content: "<p>" + document.getElementById('business').value + "<br />" +
          document.getElementById('address').value + "<br />" + 
@@ -124,101 +183,30 @@ function geocode(address){
     else {
       alert("Geocode was not successful for the following reasons" + status);
     }
-    lat.push(results[0].geometry.location.lat());
-    localStorage.setItem('lat', JSON.stringify(lat));
+    //clear original contets from the array
 
-    lng.push(results[0].geometry.location.lng());
-    localStorage.setItem('lng', JSON.stringify(lng));
+    var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+  alert(storedArray == null);
+    if (storedArray === null){
+      storedArray = [];
+    }
 
-    businessList.push(document.getElementById('business').value);
-    //prints out as a string not a array -- only if you credentals saved in array if page does not refresh
-    //if page is refreshed, and user inputs other credential, it will be overriden
-    alert(businessList);   
-    localStorage.setItem('business', JSON.stringify(businessList));
+    var location = {
+      lat : results[0].geometry.location.lat(),
+      lng : results[0].geometry.location.lng(),
+      business : document.getElementById('business').value,
+      address : document.getElementById('address').value,
+      email : document.getElementById('email').value,
+      phone : document.getElementById('phone').value,
+      service : document.getElementById('category').value,
+    };
+    console.log(JSON.stringify(location));
 
-    alert((document.getElementById('address').value));
-    addressList.push((document.getElementById('address').value));
-    alert(addressList);
-    localStorage.setItem('address', JSON.stringify(addressList));
 
-    emailList.push(document.getElementById('email').value);
-    localStorage.setItem('email', JSON.stringify(emailList));
+    storedArray.push(location);
+    localStorage.setItem("storedArray", JSON.stringify(storedArray));
+    alert(localStorage.getItem("storedArray"));
 
-    phoneList.push(document.getElementById('phone').value);
-    localStorage.setItem('phone', JSON.stringify(phoneList));
-
-    serviceList.push(document.getElementById('category').value);
-    localStorage.setItem('category', JSON.stringify(serviceList));
-
-    
-    
   });
-
-
+  
 }
-
-
-
-
-
-
-
-// const express = require('express');
-// const app = express();
-
-
-//used before attaining the environment variables
-// require('dotenv').config();
-
-// var myKey = config.APIKEY;
-
-
-
-// // APIKEY = process.env.APIKEY;
-// console.log(process.env.APIKEY);
-
-// //require library browserify
-// var browserifly = require('browserify');
-
-// //define express framework
-// const express = require('express');
-// //define cors
-// // const cors = require("cors");
-// //define app -- express being called in action
-// const app = express();
-// //port that we are listening on
-// // const port = 5500;
-
-// app.listen(5500, ()=> {
-//     console.log("started");
-// });
-
-//points to the google maps folder --index.js found in google-map folder will launch by default
-// const googleMap = require("./google-map");
-
-//enable the json middleware of every route we are listening on
-// app.use(express.json());
-
-// app.use(cors());
-
-// //test route
-// app.get("/", (req, res) => res.json({ success: "Hello World!" }));
-
-//get the google-map route
-// app.use("./google-map", googleMap);
-
-// app.listen(port, () => console.log(`App listening on port ${port}'`));
-
-//set up our api to access our environment file
-
-// let map;
-
-// async function initMap() {
-//   const { Map } = await google.maps.importLibrary("maps");
-//   map = new Map(document.getElementById("map"), {
-//     center: { lat: -34.397, lng: 150.644 },
-//     zoom: 8,
-//   });
-// }
-
-// initMap();

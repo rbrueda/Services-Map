@@ -20,21 +20,38 @@ let respondseDiv;
 let response;
 
 //create a hashmap to target service values to characters
-//C = cleaning
-//F = food 
-//H = hair
-//IT = it consulting
-//L = legal services
-//Pe = pest control
-//Pl = plumbing
-//R = real estate
-//S = security 
-//Tp = transportation
-//Tv = travel
-//Tu = tutoring
-//Y = yard
+//C = Cleaning
+//F = Food 
+//H = Hair
+//IT = IT
+//L = Legal
+//Pe = Pests
+//Pl = Plumbing
+//R = Real Estate
+//S = Security 
+//Tl = Translation
+//Tp = Transportation
+//Tv = Travel
+//Tu = Tutoring
+//Y = Yardwork
 
-
+//new hashmap that adds marker labels based on category
+let categoryLabel = new Map([
+  ["Cleaning", "C"],
+  ["Food", "F"],
+  ["Hair", "H"],
+  ["IT", "IT"],
+  ["Legal", "L"],
+  ["Pests", "Pe"],
+  ["Plumbing", "Pl"],
+  ["Real Estate", "R"],
+  ["Security", "S"],
+  ["Translation", "Tl"],
+  ["Transportation", "Tp"],
+  ["Travel", "Tv"],
+  ["Tutoring", "Tu"],
+  ["Yardwork", "Y"]
+]);
 
 var bounds, infowindow;
 
@@ -48,8 +65,10 @@ async function initMap() {
     mapTypeId: "terrain",
 
   });
+  
     //parses the storedArray built through user credentials into an array of objects
     var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+    alert(localStorage.getItem("storedArray"));
 
     //loops through each object in storage array
     for (let i = 0; i < storedArray.length; i++){
@@ -57,7 +76,7 @@ async function initMap() {
         //adds property from object as placeholders for values needed
         position: { lat: storedArray[i].lat, lng:  storedArray[i].lng},
         map: map,
-        label: "Sl", //possible way to categorize our stores?
+        label: categoryLabel.get(storedArray[i].service),
         title: "Windsor",
         draggable: false,
         animation: google.maps.Animation.DROP,
@@ -127,7 +146,7 @@ function geocode(address){
       alert("Geocode was not successful for the following reasons" + status);
     }
   
-    //gets the current localSStorage contents for "storedArray" and assigns it to storedArray
+    //gets the current localStorage contents for "storedArray" and assigns it to storedArray
     //use JSON.parse to parse to original format of object assigned to it
     var storedArray = JSON.parse(localStorage.getItem("storedArray"));
     //if there are no contents found in "storedArray"

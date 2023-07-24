@@ -1,6 +1,4 @@
 //TO DO:
-// - find a way to get info window to only display IF marker is clicked
-//  -- do research on properties of info window on google maps
 // - find a way to filter out certain services -- in other words create a function to search for service key and add the object into a new 
 // variable to will temporaily hide storedArrays contents displayed on google maps and instead the new array of objects (idea: map a new map instance -- since it will be changed back to original during page refresh)
 // - delete a marker with info window by letting user search up address and create function to search through delete the cooresponding object in storedArray
@@ -9,6 +7,7 @@
 // - info window feature displayed above (add image to infowindow?)
 // - dropdown menu for with country, depending on which country someone buts on dropdown menu, the coordinaties will be placed accordingly
 // - dropdown for user to put which type of service they like and markers will be filtered out
+// - delete a key
 
 //Problems:
 
@@ -84,16 +83,20 @@ async function initMap() {
         // icon: "maps png" //change the markers by colour (inserting an image)
       });
     
-      infowindow = new google.maps.InfoWindow({
-        content: "<p>" + storedArray[i].business + "<br />" +
-        storedArray[i].address + "<br />" + 
-       storedArray[i].email + "<br /> " + storedArray[i].phone
-       + "<br />" + "</p>",
+      //will create a new event listener when marker is displayed on screen
+      //the event listener will make info window dislay when corresponding marker is clicked
+      google.maps.event.addListener(marker, 'click', function(event){
+        //finds index that corresponds to the lat and lng
+        var index = storedArray.findIndex((location)=>(location.lat==event.latLng.lat() && location.lng==event.latLng.lng()));
+        infowindow = new google.maps.InfoWindow({
+          content: "<p>" + storedArray[index].business + "<br />" +
+          storedArray[index].address + "<br />" + 
+          storedArray[index].email + "<br /> " + storedArray[index].phone
+          + "<br />" + "</p>",
+        });
+        infowindow.open(map, marker);
       });
-      //opens marker with its corresponding infowindow from object each time storedArray is iterated
-      infowindow.open(map, marker);
-    }
-  
+    } 
   }
 //calls initMap to create the new google maps interface
 initMap();
@@ -109,69 +112,84 @@ function markersOnMap(){
 
 //create geocoordinates to system -- modify from stackoverflow file
 function geocode(address){ 
+  //create variables for info window contents
+  var businessName = document.getElementById('business');
+  var addressName = document.getElementById('address');
+  var emailName = document.getElementById('email');
+  var phoneName = document.getElementById('phone');
+  var serviceName = document.getElementById('category');
+  //add if statement to check if all value was input before adding error message
+  if (businessName && businessName.value && addressName && addressName.value && emailName
+    && emailName.value && phoneName && phoneName.value && serviceName && serviceName.value){
+    //adds marker to base map
+    initMap();
+    //calls the google maps geocoder method
+    geocoder = new google.maps.Geocoder();
+    //makes the request
+    geocoder.geocode( {'address': address}, function(results, status) {
+      //checks if geocoding status is valid (ie if address was able to geocode)
+      if (status == google.maps.GeocoderStatus.OK) {
+        //create a new google maps marker object
+        var marker = new google.maps.Marker({
+          //adds corresponding elements comprised for the marker
+          //for the future -- add marker label based on category
+          map: map,
+          position: {
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng(),
+          },
+          label: categoryLabel.get(document.getElementById('category').value),
+          animation: google.maps.Animation.DROP,
+          draggable:false,
+        });
+        alert("geocode function accessed");
+          
+        //create a new google maps infowindow object
+        infowindow = new google.maps.InfoWindow({
+          content: "<p>" + businessName.value + "<br />" +
+          addressName.value + "<br />" + 
+          emailName.value + "<br /> " + phoneName.value
+          + "<br />" + "</p>",
+        });
+        //opens the new infowindow created with the corresponding map and marker
+        infowindow.open(map, marker);
 
-  //adds marker to base map
-  initMap();
-  //calls the google maps geocoder method
-  geocoder = new google.maps.Geocoder();
-  //makes the request
-  geocoder.geocode( {'address': address}, function(results, status) {
-    //checks if geocoding status is valid (ie if address was able to geocode)
-    if (status == google.maps.GeocoderStatus.OK) {
-      //create a new google maps marker object
-      var marker = new google.maps.Marker({
-        //adds corresponding elements comprised for the marker
-        //for the future -- add marker label based on category
-        map: map,
-        position: {
-          lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng(),
-        },
-        animation: google.maps.Animation.DROP,
-        draggable:false,
-      });
-      //create a new google maps infowindow object
-      infowindow = new google.maps.InfoWindow({
-        content: "<p>" + document.getElementById('business').value + "<br />" +
-         document.getElementById('address').value + "<br />" + 
-         document.getElementById('email').value + "<br /> " + document.getElementById('phone').value
-        + "<br />" + "</p>",
-      });
-      //opens the new infowindow created with the corresponding map and marker
-      infowindow.open(map, marker);
-      alert("geocode function accessed");
-    }
-    //if geocoding was not successful
-    else {
-      alert("Geocode was not successful for the following reasons" + status);
-    }
-  
-    //gets the current localStorage contents for "storedArray" and assigns it to storedArray
-    //use JSON.parse to parse to original format of object assigned to it
-    var storedArray = JSON.parse(localStorage.getItem("storedArray"));
-    //if there are no contents found in "storedArray"
-    if (storedArray === null){
-      storedArray = [];
-    }
+        //gets the current localStorage contents for "storedArray" and assigns it to storedArray
+        //use JSON.parse to parse to original format of object assigned to it
+        var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+        //if there are no contents found in "storedArray"
+        if (storedArray === null){
+          storedArray = [];
+        }
 
-    //creates a location object that stores the attributes credentials inputted from user
-    var location = {
-      lat : results[0].geometry.location.lat(),
-      lng : results[0].geometry.location.lng(),
-      business : document.getElementById('business').value,
-      address : document.getElementById('address').value,
-      email : document.getElementById('email').value,
-      phone : document.getElementById('phone').value,
-      service : document.getElementById('category').value,
-    };
-    console.log(JSON.stringify(location));
+        //creates a location object that stores the attributes credentials inputted from user
+        var location = {
+          lat : results[0].geometry.location.lat(),
+          lng : results[0].geometry.location.lng(),
+          business : businessName.value,
+          address : addressName.value,
+          email : emailName.value,
+          phone : phoneName.value,
+          service : serviceName.value,
+        };
+        console.log(JSON.stringify(location));
 
-    //pushes the contents from location to current "storedArray" 
-    storedArray.push(location);
-    //sets the new storedArray into localStorage
-    localStorage.setItem("storedArray", JSON.stringify(storedArray));
-    alert(localStorage.getItem("storedArray"));
-
-  });
+        //pushes the contents from location to current "storedArray" 
+        storedArray.push(location);
+        //sets the new storedArray into localStorage
+        localStorage.setItem("storedArray", JSON.stringify(storedArray));
+        alert(localStorage.getItem("storedArray"));
+      
+      }
+      //if geocoding was not successful
+      else {
+        alert("Geocode was not successful for the following reasons" + status);
+      }
+    });
+  }
+  //if there were any user inquiries that will filled in
+  else{
+    alert("Not enough information to add to map");
+  }
   
 }

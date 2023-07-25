@@ -1,6 +1,4 @@
 //TO DO:
-// - find a way to filter out certain services -- in other words create a function to search for service key and add the object into a new 
-// variable to will temporaily hide storedArrays contents displayed on google maps and instead the new array of objects (idea: map a new map instance -- since it will be changed back to original during page refresh)
 // - delete a marker with info window by letting user search up address and create function to search through delete the cooresponding object in storedArray
 
 //Features:
@@ -102,8 +100,6 @@ async function initMap() {
 initMap();
 
 
-//for the future, make a function that will search for a certain category, such that will be what will be displayed on the screen
-
 //will go to function if button is clicked
 function markersOnMap(){  
   //calls the method to geocode the address string
@@ -190,6 +186,68 @@ function geocode(address){
   //if there were any user inquiries that will filled in
   else{
     alert("Not enough information to add to map");
+  }  
+}
+
+//function to filter out markers based off service type
+async function filterMarkers(){
+  //starts with empty array every time
+  var filteredArray = [];
+  //get array from local storage with all of the objects
+  var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+  //variable with servcie trying to search for
+  var toSearch = document.getElementById('category2').value;
+
+  //general function to check if object contains same value name
+  const valueExists = (obj, value) => Object.keys(obj).some((key) => obj[key] === value);
+
+  //looks through all objects in storedArray
+  for (let i = 0; i < storedArray.length; i++){
+    //checks if the object has name service name as one selected
+    if (valueExists(storedArray[i], toSearch)){
+      //push into the new array
+      filteredArray.push(storedArray[i]);
+    }
   }
-  
+
+  //create a new google maps instance
+  const { Map } = await google.maps.importLibrary("maps");
+  //creates a new instance of a google map with corresponding coordinates
+  map = new Map(document.getElementById("map"), {
+    //coordinates of windsor
+    center: { lat: 42.3149, lng: -83.0364 },
+    zoom: 10,
+    mapTypeId: "terrain",
+
+  });
+
+    //loops through each object in filteredArray
+    for (let i = 0; i < filteredArray.length; i++){
+      const marker = new google.maps.Marker({
+        //adds property from object as placeholders for values needed
+        position: { lat: filteredArray[i].lat, lng:  filteredArray[i].lng},
+        map: map,
+        label: categoryLabel.get(filteredArray[i].service),
+        title: "Windsor",
+        draggable: false,
+        animation: google.maps.Animation.DROP,
+        
+        // icon: "maps png" //change the markers by colour (inserting an image)
+      });
+    
+      //will create a new event listener when marker is displayed on screen
+      //the event listener will make info window dislay when corresponding marker is clicked
+      google.maps.event.addListener(marker, 'click', function(event){
+        //finds index that corresponds to the lat and lng
+        var index = filteredArray.findIndex((location)=>(location.lat==event.latLng.lat() && location.lng==event.latLng.lng()));
+        infowindow = new google.maps.InfoWindow({
+          content: "<p>" + filteredArray[index].business + "<br />" +
+          filteredArray[index].address + "<br />" + 
+          filteredArray[index].email + "<br /> " + filteredArray[index].phone
+          + "<br />" + "</p>",
+        });
+        infowindow.open(map, marker);
+      });
+    } 
+
 }

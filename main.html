@@ -19,7 +19,8 @@
         Phone Number: <input type="text" name="phone_number" id="phone" maxlength="10" >
         <br>
         <ul></u>Address: <input type= "text" name="address" id="address" >
-        Email: <input type="text" name="email" id="email">
+        <!-- check if valid-->
+        Email: <input type="email" placeholder="me@example.com" name="email" id="email" required>
         <!-- Dropdown for business credentials: This dropdown menu should be the SAAME for the client dropdown-->
         Type of Service: <select name="category" id="category">
             <option value="Cleaning">Cleaning</option>
@@ -70,7 +71,9 @@
 
 
         </form>
-          
+    
+        <!-- source to send emails? -->
+    <script src = "https://smtpjs.com/v3/smtp.js"></script>
     <script type="module" src="config.js"></script>
     <script type="module" src="main.js"></script>
 </body>

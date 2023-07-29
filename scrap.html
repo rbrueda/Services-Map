@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Send Mail</title>
+  <script src=
+    "https://smtpjs.com/v3/smtp.js">
+  </script>
+  
+  <script type="text/javascript">
+    function sendEmail() {
+        Email.send({
+            Host : "smtp.gmail.com",
+            SecureToken : "2db88ea1-a22d-4390-8f3c-cb7e99588479",
+            //add email for who you are sending it to
+            To : 'mariatutoring3@gmail.com',
+            From : 'servicemap418@gmail.com',
+            Subject : "Verification for Deleting Service",
+            Body : "This is a test email!!",
+        })
+            .then(function(message){
+            alert("Email has been sent for verification!");
+            });
+    }
+  </script>
+</head>
+  
+<body>
+  <form method="post">
+    <input type="button" value="Send Email" 
+        onclick="sendEmail()" />
+  </form>
+</body>
+</html>

@@ -16,6 +16,7 @@ let geocoder;
 let respondseDiv;
 let response;
 
+
 //create a hashmap to target service values to characters
 //C = Cleaning
 //F = Food 
@@ -52,7 +53,7 @@ let categoryLabel = new Map([
 
 var bounds, infowindow;
 
-async function initMap() {
+async function initMap(index) {
   const { Map } = await google.maps.importLibrary("maps");
   //creates a new instance of a google map with corresponding coordinates
   map = new Map(document.getElementById("map"), {
@@ -85,13 +86,25 @@ async function initMap() {
       //the event listener will make info window dislay when corresponding marker is clicked
       google.maps.event.addListener(marker, 'click', function(event){
         //finds index that corresponds to the lat and lng
-        var index = storedArray.findIndex((location)=>(location.lat==event.latLng.lat() && location.lng==event.latLng.lng()));
+        index = storedArray.findIndex((location)=>(location.lat==event.latLng.lat() && location.lng==event.latLng.lng()));
+        alert(index);
+
+        // var inputElement = document.createElement('Button');
+        // inputElement.type = "button";
+
+        // inputElement.addEventListener('click', function(){
+        //   deleteMarker(index);
+        // });
+
         infowindow = new google.maps.InfoWindow({
           content: "<p>" + storedArray[index].business + "<br />" +
           storedArray[index].address + "<br />" + 
           storedArray[index].email + "<br /> " + storedArray[index].phone
-          + "<br />" + "</p>",
+           + "</p>" + "<br />" + '<form method="post"><input type="button" value="Delete" onClick="deleteMarker(\'' + index + '\')" /></form>'
+
+           ,
         });
+
         infowindow.open(map, marker);
       });
     } 
@@ -128,7 +141,6 @@ function geocode(address){
         //create a new google maps marker object
         var marker = new google.maps.Marker({
           //adds corresponding elements comprised for the marker
-          //for the future -- add marker label based on category
           map: map,
           position: {
             lat: results[0].geometry.location.lat(),
@@ -195,7 +207,7 @@ async function filterMarkers(){
   var filteredArray = [];
   //get array from local storage with all of the objects
   var storedArray = JSON.parse(localStorage.getItem("storedArray"));
-  //variable with servcie trying to search for
+  //variable with service trying to search for
   var toSearch = document.getElementById('category2').value;
 
   //general function to check if object contains same value name
@@ -239,15 +251,44 @@ async function filterMarkers(){
       //the event listener will make info window dislay when corresponding marker is clicked
       google.maps.event.addListener(marker, 'click', function(event){
         //finds index that corresponds to the lat and lng
-        var index = filteredArray.findIndex((location)=>(location.lat==event.latLng.lat() && location.lng==event.latLng.lng()));
+        index = filteredArray.findIndex((location)=>(location.lat==event.latLng.lat() && location.lng==event.latLng.lng()));
         infowindow = new google.maps.InfoWindow({
           content: "<p>" + filteredArray[index].business + "<br />" +
           filteredArray[index].address + "<br />" + 
           filteredArray[index].email + "<br /> " + filteredArray[index].phone
           + "<br />" + "</p>",
         });
+
+        //to do: track index for storedArray when markers are filtered
+
         infowindow.open(map, marker);
       });
     } 
-
 }
+
+//find a way to validate through email address before deleting
+async function deleteMarker(index){
+  var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+  alert("button clicked on delete marker");
+  //see if the gmail address gets transferred -- index is tranferred correctly!
+  alert(index);
+  alert(storedArray[index].email);
+  //email is not sending-- figure out problem
+  Email.send({
+    //can use username and password-- however, this way is more secure
+    SecureToken : "e530db2a-b166-4eba-ab25-fcf4021974d7",
+    //add email for who you are sending it to
+    To : 'mariatutoring3@gmail.com',
+    From : 'servicemap418@gmail.com',
+    Subject : "Verification for Deleting Service",
+    Body : "This is a another test email!!",
+})
+    .then(function(message){
+    alert("Email has been sent for verification! Please check spam folder");
+    });
+
+
+  
+}
+
+

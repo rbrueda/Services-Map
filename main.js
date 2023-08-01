@@ -1,14 +1,16 @@
 //TO DO:
 // - delete a marker with info window by letting user search up address and create function to search through delete the cooresponding object in storedArray
+// - translation api -- other machine learning apis 
+// - auto typing with google contacts
+// - when clicked "submit" use web scraping to find website for company?
+// - help button?
 
 //Features:
 // - info window feature displayed above (add image to infowindow?)
-// - dropdown menu for with country, depending on which country someone buts on dropdown menu, the coordinaties will be placed accordingly
-// - dropdown for user to put which type of service they like and markers will be filtered out
 // - delete a key
 
 //Problems:
-
+// - if problem happens with local storage - clear it!
 
 
 let map;
@@ -63,9 +65,9 @@ async function initMap(index) {
     mapTypeId: "terrain",
 
   });
-  
     //parses the storedArray built through user credentials into an array of objects
     var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+    
     alert(localStorage.getItem("storedArray"));
 
     //loops through each object in storage array
@@ -115,8 +117,11 @@ initMap();
 
 //will go to function if button is clicked
 function markersOnMap(){  
-  //calls the method to geocode the address string
-  geocode(document.getElementById('address').value);
+     if (confirm("Are you sure? You can't go back!") == true) {
+         geocode(document.getElementById('address').value);
+     } else {
+      
+     }
 }
 
 //create geocoordinates to system -- modify from stackoverflow file
@@ -127,9 +132,15 @@ function geocode(address){
   var emailName = document.getElementById('email');
   var phoneName = document.getElementById('phone');
   var serviceName = document.getElementById('category');
-  //add if statement to check if all value was input before adding error message
-  if (businessName && businessName.value && addressName && addressName.value && emailName
-    && emailName.value && phoneName && phoneName.value && serviceName && serviceName.value){
+   //validate email name
+ //+ : means one or more occurences of that character
+ var regx = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9])+.([a-z]+)(.[a-z]+)?$/
+ //validate phone number
+ var regx2 = /^[\+]?([0-9][\s]?|[0-9]?)([(][0-9]{3}[)][\s]?|[0-9]{3}[-\s\.]?)[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
+ //add if statement to check if all value was input before adding error message
+ if (businessName && businessName.value && addressName && addressName.value && regx.test(emailName.value) && emailName
+   && emailName.value && regx2.test(phoneName.value) && phoneName && phoneName.value && serviceName && serviceName.value){
+
     //adds marker to base map
     initMap();
     //calls the google maps geocoder method
@@ -165,6 +176,7 @@ function geocode(address){
         //gets the current localStorage contents for "storedArray" and assigns it to storedArray
         //use JSON.parse to parse to original format of object assigned to it
         var storedArray = JSON.parse(localStorage.getItem("storedArray"));
+        alert(storedArray);
         //if there are no contents found in "storedArray"
         if (storedArray === null){
           storedArray = [];
@@ -181,6 +193,7 @@ function geocode(address){
           service : serviceName.value,
         };
         console.log(JSON.stringify(location));
+        alert(JSON.stringify(location));
 
         //pushes the contents from location to current "storedArray" 
         storedArray.push(location);
@@ -197,7 +210,17 @@ function geocode(address){
   }
   //if there were any user inquiries that will filled in
   else{
-    alert("Not enough information to add to map");
+    if (!regx.test(emailName.value)){
+      alert("Invalid email");
+    }
+    if (!regx2.test(phoneName.value)){
+      alert("Invalid phone number/format");
+    }
+    if (!businessName || !businessName.value || !addressName || !addressName.value || !emailName
+    || !emailName.value || !phoneName || !phoneName.value || !serviceName || !serviceName.value){
+      alert("Not enough information to add to map");
+    }
+    
   }  
 }
 
@@ -281,14 +304,25 @@ async function deleteMarker(index){
     To : 'mariatutoring3@gmail.com',
     From : 'servicemap418@gmail.com',
     Subject : "Verification for Deleting Service",
-    Body : "This is a another test email!!",
+    Body : '<html><input type="button" id = "button" value="Verify Deleting Service" onClick="verification()" /></html>',
 })
     .then(function(message){
     alert("Email has been sent for verification! Please check spam folder");
     });
 
+    if(document.getElementById('button').clicked == true)
+{
+   alert("button was clicked");
+}
+
 
   
+}
+
+function verification(){
+  //does not go to this function :(
+  console.log("it worked?");
+  alert("it worked!");
 }
 
 

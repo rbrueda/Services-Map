@@ -9,18 +9,28 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
 
-    <style type="text/css">
-
-        body { background-color: #c4dff4;
-            
-            }
-
-    </style>
-
     <body>
         <h1>Services Map</h1>
         <hr>
-    <div id="map"></div>
+        <button data-modal-target="#modal">Help</button>
+        <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="title">Help</div>
+      <button data-close-button class="close-button">&times;</button>
+    </div>
+    <div class="modal-body">
+        <div style="text-align: center">
+        <img src="profile.png" width="150" height="150" alt="profile" />
+        </div>
+        <br/>
+      Hi There! If you have any questions or issues please message us at: <br/>
+      email: <a href = "mailto:servicemap418@gmail.com">servicemap418@gmail.com</a><br/>
+      phone: (653)342-5654
+    </div>
+    </div>
+        <!-- will allow our screen to darken when pop up window is up-->
+        <div id = "overlay"></div>
+        <div id="map"></div>
       <form>
         <!-- Could use if person wants to insert imag of business to their pop-up window-->
         <input type = "file" id = "fileInputControl" accept = "text plain" />     
@@ -81,7 +91,7 @@
 
         </form>
     
-        <!-- source to send emails? -->
+        <!-- source to send emails -->
     <script src = "https://smtpjs.com/v3/smtp.js"></script>
     <script type="module" src="config.js"></script>
     <script type="module" src="main.js"></script>

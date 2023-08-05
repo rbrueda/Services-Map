@@ -1,5 +1,4 @@
 //TO DO:
-// - delete a marker with info window by letting user search up address and create function to search through delete the cooresponding object in storedArray
 // - translation api -- other machine learning apis 
 // - auto typing with google contacts
 // - when clicked "submit" use web scraping to find website for company?
@@ -354,10 +353,53 @@ async function deleteMarker(index){
   
 }
 
-function verification(){
-  //does not go to this function :(
-  console.log("it worked?");
-  alert("it worked!");
+//opens the pop up window in the many ways in which pop up window is activated
+const openModalButtons = document.querySelectorAll('[data-modal-target]');
+const closeModalButtons = document.querySelectorAll('[data-close-button]');
+//get the content from overlay
+const overlay = document.getElementById('overlay');
+
+//listener when help button is clicked
+openModalButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    //get content from modal
+    const modal = document.querySelector(button.dataset.modalTarget);
+    //creates the function that is going to pass modal as parameter
+    openModal(modal);
+  })
+})
+
+overlay.addEventListener('click', () => {
+  //get all of the modals open at are active
+  const modals = document.querySelectorAll('.modal.active');
+  //close all the active modals
+  modals.forEach(modal => {
+    closeModal(modal);
+  })
+})
+
+closeModalButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    //closest parent element of this modal -- in this class is will search for classname "modal" and return it
+    const modal = button.closest('.modal');
+    closeModal(modal);
+  })
+})
+
+function openModal(modal) {
+  //if there is nothing in modal
+  if (modal == null) return;
+  //add a class to modal -- add the active class
+  modal.classList.add('active');
+  //add a class to overlay -- add the active class
+  overlay.classList.add('active');
+}
+
+function closeModal(modal) {
+  if (modal == null) return;
+  //same thing as openModal except it removes the class
+  modal.classList.remove('active');
+  overlay.classList.remove('active');
 }
 
 

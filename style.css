@@ -17,4 +17,87 @@ body {
   width: 100vw;
   margin: 0;
   padding: 2000;
+  background-color: #c4dff4;
+
 }
+
+hr{
+  border: none;
+  height: 3px;
+  background-color: #a0bed6;
+}
+
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+/*
+For styling pop up window
+*/
+.modal {
+  /*want to pop up window to follow them always*/
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /*scale(0): makes it disappear when website first runs*/
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+  border: 1px solid black;
+  border-radius: 10px;
+  /* we want our pop up window to draw between everything else */
+  z-index: 10;
+  background-color: #d7e9f7;
+  width: 500px;
+  max-width: 80%;
+}
+
+.modal.active {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #a0bed6;
+}
+
+.modal-header .title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-header .close-button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-body {
+  padding: 10px 15px;
+}
+
+#overlay {
+  position: fixed;
+  opacity: 0;
+  /* gradually fades away*/
+  transition: 200ms ease-in-out;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  /* our overlap wont capture our click events*/
+  pointer-events: none;
+}
+
+#overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+

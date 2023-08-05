@@ -1,4 +1,36 @@
-var arraylist = [{"lat":42.2712258,"lng":-83.0114629,"business":"Maria's Tutoring","address":"3120 Dougall Ave, Windsor, ON, Canada","email":"mariatutoring3@gmail.com","phone":"3423432222","service":"Tutoring"},{"lat":42.3145445,"lng":-82.9432667,"business":"Bob's Cleaning","address":"7100 Tecumseh Rd E, Windsor, ON, Canada","email":"bobcleaning@gmail.com","phone":"4425556767","service":"Cleaning"},{"lat":42.3066798,"lng":-83.06865959999999,"business":"Travel To Go","address":"401 Sunset Ave, Windsor, ON, Canada","email":"traveltogo@gmail.com","phone":"2268887777","service":"Transportation"}];
+const openModalButtons = document.querySelectorAll('[data-modal-target]')
+const closeModalButtons = document.querySelectorAll('[data-close-button]')
+const overlay = document.getElementById('overlay')
 
-arraylist.splice(0, 1);
-console.log(arraylist);
+openModalButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const modal = document.querySelector(button.dataset.modalTarget)
+    openModal(modal)
+  })
+})
+
+overlay.addEventListener('click', () => {
+  const modals = document.querySelectorAll('.modal.active')
+  modals.forEach(modal => {
+    closeModal(modal)
+  })
+})
+
+closeModalButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const modal = button.closest('.modal')
+    closeModal(modal)
+  })
+})
+
+function openModal(modal) {
+  if (modal == null) return
+  modal.classList.add('active')
+  overlay.classList.add('active')
+}
+
+function closeModal(modal) {
+  if (modal == null) return
+  modal.classList.remove('active')
+  overlay.classList.remove('active')
+}

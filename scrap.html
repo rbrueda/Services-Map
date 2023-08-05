@@ -1,33 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Send Mail</title>
-  <script src=
-    "https://smtpjs.com/v3/smtp.js">
-  </script>
-  
-  <script type="text/javascript">
-    function sendEmail() {
-        Email.send({
-            Host : "smtp.gmail.com",
-            SecureToken : "2db88ea1-a22d-4390-8f3c-cb7e99588479",
-            //add email for who you are sending it to
-            To : 'mariatutoring3@gmail.com',
-            From : 'servicemap418@gmail.com',
-            Subject : "Verification for Deleting Service",
-            Body : "This is a test email!!",
-        })
-            .then(function(message){
-            alert("Email has been sent for verification!");
-            });
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Modal</title>
+  <link href="scrap.css" rel="stylesheet">
+  <script defer src="scrap.js"></script>
 </head>
-  
 <body>
-  <form method="post">
-    <input type="button" value="Send Email" 
-        onclick="sendEmail()" />
-  </form>
+  <button data-modal-target="#modal">Help</button>
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="title">Example Modal</div>
+      <button data-close-button class="close-button">&times;</button>
+    </div>
+    <div class="modal-body">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse quod alias ut illo doloremque eum ipsum obcaecati distinctio debitis reiciendis quae quia soluta totam doloribus quos nesciunt necessitatibus, consectetur quisquam accusamus ex, dolorum, dicta vel? Nostrum voluptatem totam, molestiae rem at ad autem dolor ex aperiam. Amet assumenda eos architecto, dolor placeat deserunt voluptatibus tenetur sint officiis perferendis atque! Voluptatem maxime eius eum dolorem dolor exercitationem quis iusto totam! Repudiandae nobis nesciunt sequi iure! Eligendi, eius libero. Ex, repellat sapiente!
+    </div>
+  </div>
+  <div id="overlay"></div>
 </body>
 </html>

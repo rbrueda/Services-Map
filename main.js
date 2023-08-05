@@ -103,6 +103,7 @@ async function initMap(index) {
           storedArray[index].address + "<br />" + 
           storedArray[index].email + "<br /> " + storedArray[index].phone
            + "</p>" + "<br />" + '<form method="post"><input type="button" value="Delete" onClick="deleteMarker(\'' + index + '\')" /></form>'
+           + "<br />" + 'Verification Code: <input type="text" name="verication_code" id="verication" + >' + '<form method="post"><input type="button" value="Verify" id="verifybtn" /></form>'
 
            ,
         });
@@ -296,18 +297,52 @@ async function deleteMarker(index){
   //see if the gmail address gets transferred -- index is tranferred correctly!
   alert(index);
   alert(storedArray[index].email);
-  //email is not sending-- figure out problem
+  
+  let otp_val = Math.floor(Math.random()*10000);
+
+  let emailBody = `
+    <h1>Hi there! A request has been sent to delete service. Here is verification code:</h1> </br>
+    <h2>Your OTP is </h2>${otp_val}
+  `
+
   Email.send({
     //can use username and password-- however, this way is more secure
     SecureToken : "e530db2a-b166-4eba-ab25-fcf4021974d7",
     //add email for who you are sending it to
-    To : 'mariatutoring3@gmail.com',
+    To : storedArray[index].email,
     From : 'servicemap418@gmail.com',
     Subject : "Verification for Deleting Service",
-    Body : '<html><input type="button" id = "button" value="Verify Deleting Service" onClick="verification()" /></html>',
+    Body : emailBody,
 })
+//if success returns ok
     .then(function(message){
-    alert("Email has been sent for verification! Please check spam folder");
+    alert("Email has been sent with verification code! Please check spam folder");
+
+    //now making otp input visible
+      const otp_inp = document.getElementById('verication');
+      const otp_btn = document.getElementById('verifybtn');
+
+
+      otp_btn.addEventListener('click', ()=>{
+        //check whether sent email is valid
+        if (otp_inp.value == otp_val){
+          alert("Verification worked! Service is deleted from map!");
+          //takes aways that object from storedArray and updates localstorage
+          //removing object form array is causing issues - fix tomorrow
+          storedArray.splice(index, 1);
+          localStorage.setItem("storedArray", JSON.stringify(storedArray));
+          //check if it removes specific element
+          alert(index);
+          alert(storedArray.splice(index, 1));
+
+          //updates map to screen
+          initMap();
+        }
+        else{
+          alert("Invalid verification code");
+        }
+      })
+
     });
 
     if(document.getElementById('button').clicked == true)

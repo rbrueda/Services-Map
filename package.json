@@ -1,6 +1,5 @@
 {
   "name": "coupon-map",
-  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -20,6 +19,18 @@
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.3",
-    "nodemon": "^2.0.22"
-  }
+    "nodemon": "^3.0.1"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbrueda/services-map.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/rbrueda/services-map/issues"
+  },
+  "homepage": "https://github.com/rbrueda/services-map#readme"
 }

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Service Map</title>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <!-- will refer to functions inside main.js-->
+        <script type = "text/javascript" src="/static/main.js"></script>
+        <script src = "https://smtpjs.com/v3/smtp.js"></script>
+        <!-- sources th config and main js file-->
+        <script type="module" src="/static/config.js"></script>
+        <script type="module" src="/static/main.js"></script>
+
+      
+        <!-- sources the css file-->
+        <link rel="stylesheet" type="text/css" href="/static/styles/style.css" />
+    </head>
+
+    <body>
+        <h1>Services Map</h1>
+        <hr>
+        <!-- button that displays help information-->
+        <label for= "button">Need help?</label><button data-modal-target="#modal" id = "button">Click Here</button>
+        <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="title">Help</div>
+      <button data-close-button class="close-button">&times;</button>
+    </div>
+    <!-- information on the help window-->
+    <div class="modal-body">
+        <div style="text-align: center">
+        <img src="/static/profile.png" width="150" height="150" alt="profile" />
+        </div>
+        <br/>
+      Hi There! If you have any questions or issues please message us at: <br/>
+      email: <a href = "mailto:servicemap418@gmail.com">servicemap418@gmail.com</a><br/>
+      phone: <a href="tel:(653)342-5654">(653)342-5654</a>
+        ----------------------------------------------------------------------------------
+      NOTES/SHORTCUTS: <br />
+      <ul>
+        <li>Once you submit your service, you must refresh page to get info window credentials.</li>
+        <li>If you click on the "Credentials Shortcut" button after pasting service website (if you have one) it may autofill some of your credentials</li>
+      </ul>
+    </div>
+    </div>
+        <!-- will allow our screen to darken when pop up window is up-->
+        <div id = "overlay"></div>
+        <div class="row">
+        <div class="column">
+          <div id="map" style="width:100%; height:35em;"></div>
+        </div>
+            
+        <div class="column" style="text-align:center;">
+
+          <h2>Add service</h2>
+        <!-- assigns a form with the user credentials with contains actions and methods for allowing linkage of python code -->
+      <form action="http://127.0.0.1:5011/" method="POST">
+        <!--Jinja template-->
+        <!-- alerts for errors if there is any-->
+        {% if errors %}
+          <script>
+            alert("{{errors}}")
+          </script>
+        {% endif %}
+        
+        <!-- checks if attributes are returned -- if not then input types will not display values-->
+        {% if url %}
+          <label for = "name">Website URL: </label><input type="text" style="background-color:#e9e9ed" name="name" id="name" value="{{url}}">
+        {% else %}
+          <label for = "name">Website URL: </label><input type="text" style="background-color:#e9e9ed" name="name" id="name">
+        {% endif %}
+        
+        <input type="Submit" value="Credentials Shortcut"></input>
+        <br/><br/>
+
+        <label for = "business">Name of Business: </label><input type="text" style="background-color:#e9e9ed" name="business_name" id="business">
+        <br /><br />
+
+        {% if phone %}
+          <label for = "phone">Phone Number: </label><input type="text" style="background-color:#e9e9ed" name="phone_number" id="phone" value="{{phone}}">
+        {% else %}
+          <label for = "phone">Phone Number: </label><input type="text" style="background-color:#e9e9ed" name="phone_number" id="phone">
+        {% endif %}
+        <br /><br />
+
+        {% if address %}
+          <label for = "address">Address: </label><input type= "text" style="background-color:#e9e9ed" name="address" id="address" value="{{address}}">
+        {% else %}
+          <label for = "address">Address: </label><input type= "text" style="background-color:#e9e9ed" name="address" id="address">
+        {% endif %}  
+        <br /><br />
+        
+            <!-- check if valid-->
+        {% if email %}
+          <label for = "email">Email: </label><input type="text" style="background-color:#e9e9ed" placeholder="me@example.com" name="email" id="email" value="{{email}}">
+        {% else %}
+          <label for = "email">Email: </label><input type="text" style="background-color:#e9e9ed" placeholder="me@example.com" name="email" id="email" >
+        {% endif %}
+        <br /><br />
+
+        <!-- Dropdown for business credentials: This dropdown menu should be the SAAME for the client dropdown-->
+        Type of Service: <select name="category" id="category">
+            <option value="Cleaning">Cleaning</option>
+            <option value="Food">Food Services</option>
+            <option value="Hair">Hair Styling</option>
+            <option value="IT">IT Consulting/Support Services</option>
+            <option value="Legal">Legal Services</option>
+            <option value="Pests">Pest Control Services</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Real Estate">Real Estate Services</option>
+            <option value="Security">Security Services</option>
+            <option value="Translation">Translation Services</option>
+            <option value="Transportation">Transportation Services</option>
+            <option value="Travel">Travel Services</option>
+            <option value="Tutoring">Tutoring Services</option>
+            <option value="Yardwork">Yard Maintainance</option>
+        </select>
+
+        <!--Once business finishes putting credentials-->
+        &nbsp&nbsp&nbsp <input type="button" class="button"
+        value="Submit" 
+        onclick="markersOnMap()" >
+        <br><br>
+        <hr>
+
+        <h2>Search for Service</h2>
+
+        <!-- dropdown menu if user want to search for a specific service-->
+        Which service are you looking for? <select name="category2" id="category2">
+            <option value="Cleaning">Cleaning</option>
+            <option value="Food">Food Services</option>
+            <option value="Hair">Hair Styling</option>
+            <option value="IT">IT Consulting/Support Services</option>
+            <option value="Legal">Legal Services</option>
+            <option value="Pests">Pest Control Services</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Real Estate">Real Estate Services</option>
+            <option value="Security">Security Services</option>
+            <option value="Translation">Translation Services</option>
+            <option value="Transportation">Transportation Services</option>
+            <option value="Travel">Travel Services</option>
+            <option value="Tutoring">Tutoring Services</option>
+            <option value="Yardwork">Yard Maintainance</option>
+        </select>
+
+        <!--Once business finishes putting credentials-->
+        &nbsp&nbsp&nbsp <input type="button" class="button"
+        value="Find" 
+        onclick="filterMarkers('/static/main.js')" >
+        <br>
+        
+
+
+      </form>
+          </div>
+
+      </div>
+    
+</body>
+
+</html>

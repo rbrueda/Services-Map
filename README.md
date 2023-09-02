@@ -43,4 +43,5 @@ Use command: ```bash"sudo pip3 install {package-name}"```
 https://youtu.be/hVtAAZ4c4fk
 
 ## License
+[MIT](https://github.com/rbrueda/Services-Map/blob/main/LICENSE)
 

@@ -66,7 +66,7 @@ For styling pop up window
   /* we want our pop up window to draw between everything else */
   z-index: 10;
   background-color: #d7e9f7;
-  width: 500px;
+  width: 600px;
   max-width: 80%;
 }
 
@@ -83,7 +83,7 @@ For styling pop up window
 }
 
 .modal-header .title {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
@@ -98,6 +98,7 @@ For styling pop up window
 
 .modal-body {
   padding: 10px 15px;
+  font-size: 18px;
 }
 
 #overlay {
@@ -118,5 +119,85 @@ For styling pop up window
   opacity: 1;
   pointer-events: all;
 }
+
+#button{
+  font-size:14pt;
+  height:30px;
+  width:110px;
+}
+
+
+#name{
+  font-size:14pt;
+  height:30px;
+  width:270px;
+}
+
+#shortcut{
+  font-size:14pt;
+  height:30px;
+  width:220px;
+}
+
+#business{
+  font-size:14pt;
+  height:30px;
+  width:270px;
+}
+
+#phone{
+  font-size:14pt;
+  height:30px;
+  width:270px;
+}
+
+#address{
+  font-size:14pt;
+  height:30px;
+  width:270px;
+}
+
+#email{
+  font-size:14pt;
+  height:30px;
+  width:270px;
+}
+
+#category{
+  font-size:14pt;
+  height:30px;
+  width:270px;
+}
+
+#submit{
+  font-size:14pt;
+  height:30px;
+  width:80px;
+}
+
+#category2{
+  font-size:14pt;
+  height:30px;
+  width:270px;
+}
+
+#find{
+  font-size:14pt;
+  height:30px;
+  width:60px;
+}
+
+.gm-style .gm-style-iw {
+  font-size: 16px;
+  font-weight: none;
+  font-family: none;
+  text-transform: none;
+}
+
+
+
+
+
+
 
 

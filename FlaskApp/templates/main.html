@@ -16,10 +16,12 @@
     </head>
 
     <body>
+      <font size = "+2">
         <h1>Services Map</h1>
+      </font>
         <hr>
         <!-- button that displays help information-->
-        <label for= "button">Need help?</label><button data-modal-target="#modal" id = "button">Click Here</button>
+        <label for= "button">Need help? </label><button data-modal-target="#modal" id = "button">Click Here</button>
         <div class="modal" id="modal">
     <div class="modal-header">
       <div class="title">Help</div>
@@ -34,7 +36,7 @@
       Hi There! If you have any questions or issues please message us at: <br/>
       email: <a href = "mailto:servicemap418@gmail.com">servicemap418@gmail.com</a><br/>
       phone: <a href="tel:(653)342-5654">(653)342-5654</a>
-        ----------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------
       NOTES/SHORTCUTS: <br />
       <ul>
         <li>Once you submit your service, you must refresh page to get info window credentials.</li>
@@ -46,12 +48,11 @@
         <div id = "overlay"></div>
         <div class="row">
         <div class="column">
-          <div id="map" style="width:100%; height:35em;"></div>
-        </div>
-            
+          <div id="map" style="width:100%; height:50em;"></div>
+        </div>   
         <div class="column" style="text-align:center;">
-
-          <h2>Add service</h2>
+        
+        <font size = "+2"> 
         <!-- assigns a form with the user credentials with contains actions and methods for allowing linkage of python code -->
       <form action="http://127.0.0.1:5011/" method="POST">
         <!--Jinja template-->
@@ -62,6 +63,7 @@
           </script>
         {% endif %}
         
+        <h2>Add service</h2>
         <!-- checks if attributes are returned -- if not then input types will not display values-->
         {% if url %}
           <label for = "name">Website URL: </label><input type="text" style="background-color:#e9e9ed" name="name" id="name" value="{{url}}">
@@ -69,7 +71,7 @@
           <label for = "name">Website URL: </label><input type="text" style="background-color:#e9e9ed" name="name" id="name">
         {% endif %}
         
-        <input type="Submit" value="Credentials Shortcut"></input>
+        <input type="Submit" value="Credentials Shortcut" id="shortcut"></input>
         <br/><br/>
 
         <label for = "business">Name of Business: </label><input type="text" style="background-color:#e9e9ed" name="business_name" id="business">
@@ -117,7 +119,7 @@
 
         <!--Once business finishes putting credentials-->
         &nbsp&nbsp&nbsp <input type="button" class="button"
-        value="Submit" 
+        value="Submit" id="submit"
         onclick="markersOnMap()" >
         <br><br>
         <hr>
@@ -144,10 +146,10 @@
 
         <!--Once business finishes putting credentials-->
         &nbsp&nbsp&nbsp <input type="button" class="button"
-        value="Find" 
+        value="Find" id="find"
         onclick="filterMarkers('/static/main.js')" >
         <br>
-        
+      </font>
 
 
       </form>

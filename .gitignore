@@ -1,3 +1,11 @@
 config.js
 flask/
 node_modules/
+flask-2.3.3.dist-info/
+click/
+blinker/
+itsdangerous/
+jinja2/
+lib/
+validators/
+werkzeug/

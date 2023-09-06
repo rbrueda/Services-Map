@@ -27,13 +27,14 @@ Other features of this platform are:
     ({key: {YOUR_API_KEY}, v: "weekly"});
    ```
 8. Alternative: directly putting it on main.html file using <script> tags
-9. Install python packages: flask, validators, beautifulsoup4, regex, and requests.
+9. Create a SMTP by logining into ([https://app.elasticemail.com/](https://app.elasticemail.com/login) and generating a secure token through [https://smtpjs.com/](https://smtpjs.com/) 
+10. Install python packages: flask, validators, beautifulsoup4, regex, and requests.
 Use command:
 ```bash
 sudo pip3 install {PACKAGE_NAME}
 ```
 
-10. Run the Service Map server by runnning command python3 app.py (name of python file where Flask is executed) with respect to the Python path file directory
+11. Run the Service Map server by runnning command python3 app.py (name of python file where Flask is executed) with respect to the Python path file directory
 
 - *ADDITIONAL NOTES: the regular expressions used in "main.js" and "app.py" only work for limitted test cases (for example may not validate phone numbers in some formats), if new restrictions or add-ons are needed, feel free to alter them*
 

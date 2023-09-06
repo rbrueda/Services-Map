@@ -27,7 +27,7 @@ Other features of this platform are:
     ({key: {YOUR_API_KEY}, v: "weekly"});
    ```
 8. Alternative: directly putting it on main.html file using <script> tags
-9. Create a SMTP by logining into ([https://app.elasticemail.com/](https://app.elasticemail.com/login) and generating a secure token through [https://smtpjs.com/](https://smtpjs.com/) 
+9. Create a SMTP by logining into [https://app.elasticemail.com/](https://app.elasticemail.com/login) and generating a secure token through [https://smtpjs.com/](https://smtpjs.com/) 
 10. Install python packages: flask, validators, beautifulsoup4, regex, and requests.
 Use command:
 ```bash
